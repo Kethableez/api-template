@@ -1,6 +1,6 @@
 {
   "name": "api-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Basic api template with node.js",
   "main": "src/index.ts",
   "scripts": {
