@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 function resourcePass(req: Request, res: Response, next: NextFunction): void {
   const method = req.method;
-  const call = req.url
-    .split("/")
-    .filter((part) => part === "download" || part === "file");
+  const call = req.url.split("/").filter((part) => part === "download" || part === "file");
   if (method && call.includes("download") && call.includes("file"))
     res.setHeader("Cross-Origin-Resource-Policy", "same-site");
   next();

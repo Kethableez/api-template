@@ -1,13 +1,9 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { validateToken } from "../functions/auth-token.function";
-import { HttpException } from "../utils/models/http-exception.model";
+import HttpException from "../utils/models/http-exception.model";
 
-export async function authMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization;
 
   if (!token) {

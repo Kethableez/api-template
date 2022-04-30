@@ -18,6 +18,11 @@ const TOKEN_ISSUER = process.env.TOKEN_ISSUER || "any-travel-issuer";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "any-travel-jwt-secret";
 const TOKEN_EXPIRETIME = process.env.TOKEN_EXPIRETIME || "30m";
 
+const NODE_ENV = process.env.NODE_ENV || "development";
+const API_USE_LIMITER = process.env.API_USE_LIMITER || "false";
+const API_STORAGE_DIR = process.env.API_STORAGE_DIR || "storage";
+const API_ALLOW_FILE_UPLOAD = process.env.API_ALLOW_FILE_UPLOAD || "false";
+
 const MONGO_OPTIONS = {
   useUnifiedTopology: true,
   useNewUrlParser: true,

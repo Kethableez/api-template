@@ -1,7 +1,9 @@
 import rateLimiter from "express-rate-limit";
+import config from "../config/config";
+import LimiterOptions from "../utils/models/limiter-options.model";
 
-export const limiterMiddleware = (limiterOptions: LimiterOptions) =>
-  rateLimiter({
+export function limiterMiddleware(limiterOptions: LimiterOptions) {
+  return rateLimiter({
     windowMs: limiterOptions.windowMs,
     max: limiterOptions.max,
     message: "Too many requests, please try again later.",
@@ -11,3 +13,4 @@ export const limiterMiddleware = (limiterOptions: LimiterOptions) =>
       response.status(options.statusCode).json({ message: options.message }),
     skip: () => process.env.API_USE_LIMITER === "false",
   });
+}

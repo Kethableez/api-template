@@ -1,3 +1,5 @@
+import BaseResponse from "../../utils/models/base-response.model";
+
 class HealthService {
   public async ping(): Promise<BaseResponse | Error> {
     try {

@@ -1,12 +1,32 @@
-# Introduction
 
-# Libraries
+# NODE.js API template
 
-# Basic functionality
+Basic rest api template written in NODE.
 
-# Documentation
+## Tech Stack
 
-# Possibilities
+**Server:** Node, Express
 
+**Database:** MongoDB
 
+**Auth:** JWT
 
+**Features:** Docker, tsLint
+
+## Features
+
+- JWT authorization
+- Database connection
+- Simple health check endpoint
+- CORS configuration
+- Error handlers
+- File upload
+- Docker
+
+## Documentation
+
+Documentation available locally -> [docs](http://localhost:9000/api/docs).
+
+## Authors
+
+- [@Kethableez](https://www.github.com/kethableez)

@@ -8,9 +8,7 @@ export const createAuthToken = (payload: any) => {
   });
 };
 
-export const validateToken = async (
-  token: string
-): Promise<jwt.VerifyErrors | jwt.JwtPayload> => {
+export const validateToken = async (token: string): Promise<jwt.VerifyErrors | jwt.JwtPayload> => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, config.auth.secret, (err, paylaod) => {
       if (err) return reject(err);

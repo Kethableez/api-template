@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
@@ -10,6 +10,10 @@ import config from "./config/config";
 import Controller from "./utils/models/controller.model";
 import errorMiddleware from "./middleware/error.middleware";
 import corsMiddleware from "./middleware/cors.middleware";
+import swaggerDocs from "./docs/swagger-config";
+import responseTime from "response-time";
+import { serverResponseTime } from "./metrics/histograms/server-response-time";
+import { monitorResponseTime } from "./middleware/response-time.middleware";
 
 class Server {
   public express: Application;
@@ -21,6 +25,7 @@ class Server {
 
     this.initializeDatabaseConnection();
     this.initializeMiddlewares();
+    this.initializeSwagger();
     this.initializeControllers(controllers);
     this.initializeErrorHandlers();
   }
@@ -36,9 +41,7 @@ class Server {
     mongoose
       .connect(url, config.mongo.options)
       .then(() => console.log(`Connected to database: ${url}`))
-      .catch((err: unknown) =>
-        console.log(`Error connecting to database: ${err}`)
-      );
+      .catch((err: unknown) => console.log(`Error connecting to database: ${err}`));
   }
 
   private initializeMiddlewares(): void {
@@ -48,19 +51,24 @@ class Server {
     this.express.use(corsMiddleware.optionSkip);
     this.express.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
     this.express.use(bodyParser.json({ limit: "10mb" }));
+    this.express.use(responseTime(monitorResponseTime));
     this.express.use(morgan("dev"));
     this.express.use(compression());
     this.express.use(cookieParser());
   }
 
   private initializeControllers(controllers: Controller[]): void {
-    controllers.forEach((controller: Controller) =>
-      this.express.use("/api", controller.router)
-    );
+    controllers.forEach((controller: Controller) => this.express.use("/api", controller.router));
   }
 
   private initializeErrorHandlers(): void {
     this.express.use(errorMiddleware.notFoundHandler);
     this.express.use(errorMiddleware.errorHandler);
   }
+
+  private initializeSwagger(): void {
+    swaggerDocs(this.express, this.port);
+  }
 }
+
+export default Server;
