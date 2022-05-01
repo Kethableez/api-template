@@ -54,7 +54,8 @@
             {
                 "max": 2
             }
-        ],
-        "no-duplicate-imports": "error"
+        ]
+        // "no-explicit-any": "off",
+        // "no-magic-numbers": "error"
     }
 }

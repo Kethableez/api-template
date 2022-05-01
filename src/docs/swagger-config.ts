@@ -1,14 +1,14 @@
+/* eslint-disable no-console */
 import { Application, Request, Response } from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { version } from '../../package.json';
 
 const options: swaggerJSDoc.Options = {
 	definition: {
 		openapi: '3.0.0',
 		info: {
 			title: 'API Documentation',
-			version: version,
+			version: '1.0.1',
 		},
 		components: {
 			securitySchemes: {

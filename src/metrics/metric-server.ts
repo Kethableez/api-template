@@ -1,35 +1,33 @@
-import express, { Application } from "express";
-import client from "prom-client";
+import express, { Application } from 'express';
+import client from 'prom-client';
 
 class MetricServer {
-  public express: Application;
-  public port: number;
+	public express: Application;
+	public port: number;
 
-  constructor(port: number) {
-    this.express = express();
-    this.port = port;
+	constructor(port: number) {
+		this.express = express();
+		this.port = port;
 
-    this.collectMetrics();
-    this.initializeMetrics();
-  }
+		this.collectMetrics();
+		this.initializeMetrics();
+	}
 
-  public listen() {
-    this.express.listen(this.port, () => {
-      console.log(`Metrics server started at: http://localhost:${this.port}/metrics`);
-    });
-  }
+	public listen() {
+		this.express.listen(this.port);
+	}
 
-  private initializeMetrics() {
-    this.express.get("/metrics", async (req, res) => {
-      res.set("Content-Type", client.register.contentType);
+	private initializeMetrics() {
+		this.express.get('/metrics', async (req, res) => {
+			res.set('Content-Type', client.register.contentType);
 
-      return res.send(await client.register.metrics());
-    });
-  }
+			return res.send(await client.register.metrics());
+		});
+	}
 
-  private collectMetrics() {
-    client.collectDefaultMetrics();
-  }
+	private collectMetrics() {
+		client.collectDefaultMetrics();
+	}
 }
 
 export default MetricServer;
