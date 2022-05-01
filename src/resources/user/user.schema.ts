@@ -1,5 +1,5 @@
-import mongoose, { Schema } from "mongoose";
-import User from "./model/user.model";
+import mongoose, { Schema } from 'mongoose';
+import User from './model/user.model';
 
 /**
  * @openapi
@@ -17,8 +17,8 @@ import User from "./model/user.model";
  *          type: string
  */
 const UserSchema = new Schema({
-  username: { type: String, required: true },
-  password: { type: String, required: true },
+	username: { type: String, required: true },
+	password: { type: String, required: true },
 });
 
-export default mongoose.model<User>("UserSchema", UserSchema);
+export default mongoose.model<User>('UserSchema', UserSchema);
