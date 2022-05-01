@@ -1,4 +1,4 @@
-import BaseResponse from "./base-response.model";
+import BaseResponse from './base-response.model';
 
 /**
  * @openapi
@@ -13,7 +13,7 @@ import BaseResponse from "./base-response.model";
  *          type: object
  */
 interface Response extends BaseResponse {
-  object: any;
+	object: any;
 }
 
 export default Response;

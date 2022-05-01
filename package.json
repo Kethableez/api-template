@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon src/index.ts",
-    "build": "rm -rf dist/ && tsc"
+    "build": "rm -rf dist/ && tsc",
+    "eslint": "npx eslint src/ --ext .ts"
   },
   "keywords": [
     "rest",
