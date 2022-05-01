@@ -1,0 +1,10 @@
+apps:
+- name : 'backend'
+  script : 'dist/index.js'
+  instances : '4'
+  exec_mode : 'cluster'
+  ignore_watch: ['node_modules', 'storage']
+  env_production:
+    NODE_ENV: 'production'
+  env_development:
+    NODE_ENV: 'development'
