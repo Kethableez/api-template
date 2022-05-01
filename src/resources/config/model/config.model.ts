@@ -1,4 +1,4 @@
-import ConfigKey from "./config-key.model";
+import ConfigKey from './config-key.model';
 /**
  * @openapi
  * components:
@@ -14,8 +14,8 @@ import ConfigKey from "./config-key.model";
  */
 
 interface ConfigRequest {
-  key: ConfigKey;
-  value: string;
+	key: ConfigKey;
+	value: string;
 }
 
 export default ConfigRequest;
