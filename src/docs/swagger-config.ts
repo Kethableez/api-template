@@ -11,11 +11,16 @@ const options: swaggerJSDoc.Options = {
       version: version,
     },
     components: {
-      securitySchemas: {
+      securitySchemes: {
         bearerAuth: {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+        },
+        cookieAuth: {
+          type: "apiKey",
+          in: "cookie",
+          name: "refreshToken",
         },
       },
     },
@@ -23,9 +28,18 @@ const options: swaggerJSDoc.Options = {
       {
         bearerAuth: [],
       },
+      {
+        cookieAuth: [],
+      },
     ],
   },
-  apis: ["./src/resources/**/*.controller.ts", "./src/resources/**/*.model.ts"],
+  apis: [
+    "./src/resources/**/*.controller.ts",
+    "./src/resources/**/*.schema.ts",
+    "./src/resources/**/model/*.model.ts",
+    "./src/utils/models/*.model.ts",
+    "./src/utils/models/*.schema.ts",
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

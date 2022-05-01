@@ -2,7 +2,7 @@
  * @openapi
  * components:
  *  schemas:
- *    LoginPayload:
+ *    CreateUserPayload:
  *      type: object
  *      properties:
  *        username:
@@ -10,10 +10,9 @@
  *        password:
  *          type: string
  */
-
-interface LoginPayload {
+interface CreateUserPayload {
   username: string;
   password: string;
 }
 
-export default LoginPayload;
+export default CreateUserPayload;

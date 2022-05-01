@@ -20,7 +20,7 @@ class AuthController implements Controller {
     this.router.post(
       `${this.path}/login`,
       limiterMiddleware(authLimiter),
-      // validationMiddleware(auth.loginValidator),
+      validationMiddleware(auth.loginValidator),
       this.login
     );
     this.router.post(`${this.path}/refresh`, limiterMiddleware(authLimiter), this.refresh);
@@ -32,22 +32,32 @@ class AuthController implements Controller {
    *  /api/auth/login:
    *    post:
    *      tags:
-   *      - auth
+   *      - AuthController
    *      summary: Login
    *      requestBody:
-   *        required: true
    *        content:
    *          application/json:
    *            schema:
-   *              type: object
-   *              properties:
-   *                username:
-   *                  type: string
-   *                password:
-   *                  type: string
+   *              $ref: '#/components/schemas/LoginPayload'
+   *      security: []
    *      responses:
    *        200:
    *          description: Login success
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/AuthResponse'
+   *          headers:
+   *            Set-Cookie:
+   *              schema:
+   *                type: string
+   *                example: refreshToken=123123123; HttpOnly; Secure; SameSite=Strict
+   *        400:
+   *          description: Bad request
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/BaseResponse'
    */
   private login = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
@@ -60,6 +70,31 @@ class AuthController implements Controller {
     }
   };
 
+  /**
+   *
+   * @openapi
+   * /api/auth/refresh:
+   *  post:
+   *    tags:
+   *    - AuthController
+   *    summary: Refresh auth token
+   *    security:
+   *      - cookieAuth: []
+   *    responses:
+   *      200:
+   *        description: Refresh success
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/AuthResponse'
+   *      400:
+   *        description: Bad request
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/BaseResponse'
+   *
+   */
   private refresh = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
       const token = req.cookies.refreshToken;
@@ -72,6 +107,29 @@ class AuthController implements Controller {
     }
   };
 
+  /**
+   * @openapi
+   * /api/auth/logout:
+   *  post:
+   *    tags:
+   *    - AuthController
+   *    summary: Logout
+   *    security:
+   *      - cookieAuth: []
+   *    responses:
+   *      200:
+   *        description: Logout success
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/BaseResponse'
+   *      400:
+   *        description: Bad request
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/BaseResponse'
+   */
   private logout = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     try {
       const token = req.cookies.refreshToken;

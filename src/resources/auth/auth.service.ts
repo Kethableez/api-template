@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { CookieOptions, Response } from "express";
 import { createAuthToken } from "../../functions/auth-token.function";
 import BaseResponse from "../../utils/models/base-response.model";
@@ -9,6 +8,7 @@ import LoginPayload from "./model/login-payload.model";
 import RefreshPayload from "./model/refresh-payload.model";
 import TokenStorage from "./model/token-storage.model";
 import tokenStorageSchema from "./token-storage.schema";
+import bcryptjs from "bcryptjs";
 
 class AuthService {
   private tokenStorage = tokenStorageSchema;
@@ -21,7 +21,7 @@ class AuthService {
 
       if (!user) throw new Error("User not found");
 
-      if (password !== user.password) throw new Error("Password is incorrect");
+      if (!(await bcryptjs.compare(password, user.password))) throw new Error("Password is incorrect");
 
       const userId = user._id.toString();
       const authToken = createAuthToken({ userId: userId });
@@ -104,11 +104,8 @@ class AuthService {
       const refreshToken = await this.tokenStorage.findOne({ token: token });
       if (!refreshToken || !isTokenActive(refreshToken)) throw new Error("Invalid token");
       return refreshToken;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("Unexpected error");
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
 }

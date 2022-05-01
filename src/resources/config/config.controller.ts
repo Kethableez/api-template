@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import { authMiddleware } from "../../middleware/auth.middleware";
 import validationMiddleware from "../../middleware/validation.middleware";
 import Controller from "../../utils/models/controller.model";
 import HttpException from "../../utils/models/http-exception.model";
@@ -15,8 +16,8 @@ class ConfigController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.get(`${this.path}`, this.getConfig);
-    this.router.post(`${this.path}`, validationMiddleware(config.setConfigValidator), this.setConfig);
+    this.router.get(`${this.path}`, authMiddleware, this.getConfig);
+    this.router.post(`${this.path}`, authMiddleware, validationMiddleware(config.setConfigValidator), this.setConfig);
   }
 
   /**
@@ -24,8 +25,10 @@ class ConfigController implements Controller {
    *  /api/config:
    *    get:
    *      tags:
-   *      - config
-   *      description: Get current api configs
+   *      - ConfigController
+   *      summary: Get configs
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        200:
    *          description: Current api configs
@@ -44,19 +47,16 @@ class ConfigController implements Controller {
    *  /api/config:
    *    post:
    *      tags:
-   *      - config
+   *      - ConfigController
    *      summary: Set config
    *      requestBody:
    *        required: true
    *        content:
    *          application/json:
    *            schema:
-   *              type: object
-   *              properties:
-   *                key:
-   *                  type: string
-   *                value:
-   *                  type: string
+   *              $ref: '#/components/schemas/ConfigRequest'
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        200:
    *          description: Config set

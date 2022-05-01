@@ -29,11 +29,15 @@ class HealthController implements Controller {
    *  /api/health/ping:
    *    get:
    *      tags:
-   *      - healthcheck
+   *      - HealthController
    *      description: Check if the server is running
    *      responses:
    *        200:
    *          description: Server is running
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/BaseResponse'
    */
   private ping = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
