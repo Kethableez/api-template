@@ -3,16 +3,6 @@
 
 Basic rest api template written in NODE.
 
-## Tech Stack
-
-**Server:** Node, Express
-
-**Database:** MongoDB
-
-**Auth:** JWT
-
-**Features:** Docker, tsLint
-
 ## Features
 
 - JWT authorization
@@ -22,10 +12,25 @@ Basic rest api template written in NODE.
 - Error handlers
 - File upload
 - Docker
+- Prometheus and Grafana monitoring
+- Process managment with PM2
+- ESLint integration
 
-## Documentation
+## TODO
 
-Documentation available locally -> [docs](http://localhost:9000/api/docs).
+- Socket.IO integration
+- RabbitMQ integration
+- Logger system
+- Testing: Unit, Load, e2e
+- Caching
+
+## Basic info
+
+Start docker env `$ docker-compose up --build`
+
+After startup:
+- Documentation -> [http://localhost:9000/api/docs](http://localhost:9000/api/docs). <br>
+- Grafana       -> [http://localhost:3000](http://localhost:3000).
 
 ## Authors
 
