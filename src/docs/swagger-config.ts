@@ -2,6 +2,7 @@
 import { Application, Request, Response } from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import chalk from 'chalk';
 
 const options: swaggerJSDoc.Options = {
 	definition: {
@@ -51,8 +52,10 @@ function swaggerDocs(app: Application, port: number) {
 		res.setHeader('Content-Type', 'application/json');
 		res.send(swaggerSpec);
 	});
-
-	console.log(`Docs available at http://localhost:${port}/api/docs`);
+	const infoString =
+		chalk.black.bold.bgBlue('Documentation:') + chalk.blue.underline(` http://localhost:${port}/api/docs`);
+	// console.log(`Docs available at http://localhost:${port}/api/docs`);
+	console.log(infoString);
 }
 
 export default swaggerDocs;

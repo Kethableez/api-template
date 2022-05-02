@@ -14,6 +14,8 @@ import corsMiddleware from './middleware/cors.middleware';
 import errorMiddleware from './middleware/error.middleware';
 import { monitorResponseTime } from './middleware/response-time.middleware';
 import Controller from './utils/models/controller.model';
+import chalk from 'chalk';
+import figlet from 'figlet';
 
 class Server {
 	public express: Application;
@@ -22,6 +24,8 @@ class Server {
 	constructor(controllers: Controller[], port: number) {
 		this.express = express();
 		this.port = port;
+
+		console.log(this.metaInfo);
 
 		this.initializeDatabaseConnection();
 		this.initializeMiddlewares();
@@ -32,7 +36,21 @@ class Server {
 
 	public listen(): void {
 		this.express.listen(this.port, () => {
-			console.log(`Server listening on port ${this.port}`);
+			const infoString =
+				chalk.black.bold.bgCyan('Server:') + chalk.cyan.underline(` http://localhost:${this.port}/api`);
+			const infoString2 = chalk.black.bold.bgMagenta('Grafana:') + chalk.magenta.underline(' http://localhost:3000');
+			console.log(infoString2);
+			console.log(infoString);
+		});
+	}
+
+	private get metaInfo() {
+		return figlet.textSync('API v1.0', {
+			font: 'Larry 3D',
+			horizontalLayout: 'default',
+			verticalLayout: 'default',
+			width: 80,
+			whitespaceBreak: true,
 		});
 	}
 
@@ -40,7 +58,6 @@ class Server {
 		const url = config.server.docker ? config.mongo.remoteUrl : config.mongo.localUrl;
 		mongoose
 			.connect(url, config.mongo.options)
-			.then(() => console.log(`Connected to database: ${url}`))
 			.catch((err: unknown) => console.log(`Error connecting to database: ${err}`));
 	}
 
