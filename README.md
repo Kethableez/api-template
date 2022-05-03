@@ -3,6 +3,14 @@
 
 Basic rest api template written in NODE.
 
+## Info
+
+- Start docker env `$ docker-compose up --build`
+
+After startup:
+- Documentation -> [http://localhost:9000/api/docs](http://localhost:9000/api/docs). <br>
+- Grafana       -> [http://localhost:3000](http://localhost:3000).
+
 ## Features
 
 - JWT authorization
@@ -10,24 +18,14 @@ Basic rest api template written in NODE.
 - Simple health check endpoint
 - CORS configuration
 - Error handlers
-- File upload
-- Docker
+- File upload, download
+- Docker integration
 - Prometheus and Grafana monitoring
 - Process managment with PM2
 - ESLint integration
-
-## TODO
-
-- Testing: Unit, Load, e2e
-- Caching
-
-## Basic info
-
-Start docker env `$ docker-compose up --build`
-
-After startup:
-- Documentation -> [http://localhost:9000/api/docs](http://localhost:9000/api/docs). <br>
-- Grafana       -> [http://localhost:3000](http://localhost:3000).
+- Logger with winston
+- Grafana with prometheus and loki integration
+- Swagger documentation
 
 ## Authors
 
