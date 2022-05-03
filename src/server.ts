@@ -16,16 +16,18 @@ import { monitorResponseTime } from './middleware/response-time.middleware';
 import Controller from './utils/models/controller.model';
 import chalk from 'chalk';
 import figlet from 'figlet';
+import HttpLogger from './logger/http-logger';
+import Logger from './logger/logger';
 
 class Server {
 	public express: Application;
 	public port: number;
+	private httpLogger = new HttpLogger();
+	private serverLogger = new Logger('Server');
 
 	constructor(controllers: Controller[], port: number) {
 		this.express = express();
 		this.port = port;
-
-		console.log(this.metaInfo);
 
 		this.initializeDatabaseConnection();
 		this.initializeMiddlewares();
@@ -36,11 +38,10 @@ class Server {
 
 	public listen(): void {
 		this.express.listen(this.port, () => {
-			const infoString =
-				chalk.black.bold.bgCyan('Server:') + chalk.cyan.underline(` http://localhost:${this.port}/api`);
-			const infoString2 = chalk.black.bold.bgMagenta('Grafana:') + chalk.magenta.underline(' http://localhost:3000');
-			console.log(infoString2);
-			console.log(infoString);
+			console.log(chalk.cyan(this.metaInfo));
+			this.serverLogger.info(`Server listening on port ${this.port}`);
+			this.serverLogger.info(`Environment: ${process.env.NODE_ENV}`);
+			this.serverLogger.info(`Docker: ${config.server.docker}`);
 		});
 	}
 
@@ -58,7 +59,10 @@ class Server {
 		const url = config.server.docker ? config.mongo.remoteUrl : config.mongo.localUrl;
 		mongoose
 			.connect(url, config.mongo.options)
-			.catch((err: unknown) => console.log(`Error connecting to database: ${err}`));
+			.then(() => {
+				this.serverLogger.info('Database: connected');
+			})
+			.catch((err: unknown) => this.serverLogger.error(`Database: ${err}`));
 	}
 
 	private initializeMiddlewares(): void {
@@ -69,7 +73,7 @@ class Server {
 		this.express.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 		this.express.use(bodyParser.json({ limit: '10mb' }));
 		this.express.use(responseTime(monitorResponseTime));
-		this.express.use(morgan('dev'));
+		this.express.use(morgan('short', { stream: this.httpLogger.stream }));
 		this.express.use(compression());
 		this.express.use(cookieParser());
 	}
@@ -84,7 +88,7 @@ class Server {
 	}
 
 	private initializeSwagger(): void {
-		swaggerDocs(this.express, this.port);
+		swaggerDocs(this.express);
 	}
 }
 

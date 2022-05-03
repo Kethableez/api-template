@@ -9,13 +9,16 @@ import RefreshPayload from './model/refresh-payload.model';
 import TokenStorage from './model/token-storage.model';
 import tokenStorageSchema from './token-storage.schema';
 import bcryptjs from 'bcryptjs';
+import Logger from '../../logger/logger';
 
 class AuthService {
 	private tokenStorage = tokenStorageSchema;
 	private user = userSchema;
+	private logger = new Logger('AuthService');
 
 	public async login(res: Response, payload: LoginPayload): Promise<AuthResponse | Error> {
 		try {
+			this.logger.info('Logging in');
 			const { username, password } = payload;
 			const user = await this.user.findOne({ username });
 
@@ -34,14 +37,17 @@ class AuthService {
 
 			this.setCookie(res, refreshToken.token, refreshToken.expiresAt);
 
+			this.logger.info('User logged in');
 			return response;
 		} catch (error: any) {
+			this.logger.error(error.message);
 			throw new Error(error.message);
 		}
 	}
 
 	public async refresh(res: Response, payload: RefreshPayload): Promise<AuthResponse | Error> {
 		try {
+			this.logger.info('Refreshing token');
 			const { token } = payload;
 
 			const refreshToken = await this.getRefreshToken(token);
@@ -56,22 +62,27 @@ class AuthService {
 
 			this.setCookie(res, refreshToken.token, refreshToken.expiresAt);
 
+			this.logger.info('Token refreshed');
 			return response;
 		} catch (error: any) {
+			this.logger.error(error.message);
 			throw new Error(error.message);
 		}
 	}
 
 	public async logout(res: Response, payload: RefreshPayload): Promise<BaseResponse | Error> {
 		try {
+			this.logger.info('Logging out');
 			const { token } = payload;
 			const refreshToken = await this.getRefreshToken(token);
 			refreshToken.revokedAt = new Date();
 			await refreshToken.save();
 			this.clearCookie(res);
 
+			this.logger.info('User logged out');
 			return { message: 'Token revoked' };
 		} catch (error: any) {
+			this.logger.error(error.message);
 			throw new Error(error.message);
 		}
 	}

@@ -36,12 +36,39 @@ services:
     networks:
       - monitoring
 
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./etc/log:/var/log
+      - ./etc/promtail:/etc/promtail
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/promtail/promtail-config.yml"
+    networks:
+      - monitoring
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    volumes:
+      - ./etc/loki:/etc/loki
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    command: 
+      - "--config.file=/etc/loki/loki-config.yml"
+    networks:
+      - monitoring
+
   backend:
     build:
       context: .
       target: backend
     container_name: backend
     command: pm2-runtime etc/pm2/process.yml
+    volumes:
+      - ./etc/log:/usr/src/api/log
     environment:
       - DOCKER=true
     expose:
