@@ -18,9 +18,6 @@ Basic rest api template written in NODE.
 
 ## TODO
 
-- Socket.IO integration
-- RabbitMQ integration
-- Logger system
 - Testing: Unit, Load, e2e
 - Caching
 
