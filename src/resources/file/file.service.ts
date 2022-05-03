@@ -1,30 +1,33 @@
 import { getFilePath } from '../../functions/file-path.function';
 import Logger from '../../logger/logger';
 import fileSchema from './file.schema';
+import FileUploadPayload from './model/file-upload-payload.model';
+import FileResponse from './model/file-response.model';
+import FileDownloadPayload from './model/file-download-payload.model';
 
 class FileService {
 	private file = fileSchema;
 	private logger = new Logger('File');
 
-	public async uploadFile(payload: any): Promise<any | Error> {
+	public async uploadFile(payload: FileUploadPayload): Promise<FileResponse | Error> {
 		try {
-			this.logger.info(`Attempt to upload file: ${payload.filename}`);
+			this.logger.info(`Attempt to upload file: ${payload.file?.filename}`);
 
 			const { selector, file } = payload;
 
 			if (!selector) throw new Error('Selector is required');
 			if (!file) throw new Error('File is required');
 
-			await this.file.create({
+			const newFile = await this.file.create({
 				filename: file.filename,
 				mimetype: file.mimetype,
 				dirSelector: selector,
 			});
 
-			this.logger.info(`File uploaded with id ${file._id}`);
+			this.logger.info(`File uploaded with id ${newFile._id}`);
 			return {
 				message: 'File uploaded successfully',
-				fileId: file._id,
+				fileId: newFile._id,
 			};
 		} catch (error: any) {
 			this.logger.error(error.message);
@@ -32,9 +35,9 @@ class FileService {
 		}
 	}
 
-	public async downloadFile(payload: any): Promise<any | Error> {
+	public async downloadFile(payload: FileDownloadPayload): Promise<any | Error> {
 		try {
-			this.logger.info(`Attempt to download file: ${payload.filename}`);
+			this.logger.info(`Attempt to download file: ${payload.fileId}`);
 
 			const { selector, fileId } = payload;
 
