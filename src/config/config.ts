@@ -49,7 +49,7 @@ const AUTH = {
 const SERVER = {
 	hostname: SERVER_HOSTNAME,
 	port: SERVER_PORT,
-	mode: SERVER_MODE,
+	mode: SERVER_MODE || 'development',
 	docker: process.env.DOCKER === 'true' || false,
 };
 

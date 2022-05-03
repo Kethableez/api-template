@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import { getFilePath } from '../functions/file-path.function';
+import HttpException from '../utils/models/http-exception.model';
 
 const MAX_SIZE = 1024 * 1024 * 10;
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
@@ -18,18 +19,24 @@ const storage = multer.diskStorage({
 	},
 });
 
-const upload = multer({
-	storage,
-	fileFilter: (req, file, cb) => {
-		if (ALLOWED_FILE_TYPES.includes(file.mimetype)) {
-			cb(null, true);
-		} else {
-			cb(null, false);
-			throw new Error('Invalid file type');
-		}
-	},
-	limits: { fileSize: MAX_SIZE },
-}).single('file');
+const upload = (req: Request, res: Response, next: NextFunction) => {
+	const upload = multer({
+		storage,
+		fileFilter: (req, file, cb) => {
+			if (ALLOWED_FILE_TYPES.includes(file.mimetype)) {
+				cb(null, true);
+			} else {
+				cb(null, false);
+				next(new HttpException(400, 'Invalid file type'));
+			}
+		},
+		limits: { fileSize: MAX_SIZE },
+	}).single('file');
+
+	upload(req, res, (error: any) => {
+		next();
+	});
+};
 
 const fakeUpload = (req: Request, res: Response, next: NextFunction) => {
 	next();
