@@ -1,8 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { authMiddleware } from '../../middleware/auth.middleware';
+import { environmentLock } from '../../middleware/env-lock.middleware';
+import { roleMiddleware } from '../../middleware/role.middleware';
 import validationMiddleware from '../../middleware/validation.middleware';
 import Controller from '../../utils/models/controller.model';
 import HttpException from '../../utils/models/http-exception.model';
+import Role from '../../utils/models/role.model';
 import ConfigService from './config.service';
 import config from './helpers/config.validator';
 
@@ -16,8 +19,15 @@ class ConfigController implements Controller {
 	}
 
 	private initializeRoutes(): void {
-		this.router.get(`${this.path}`, authMiddleware, this.getConfig);
-		this.router.post(`${this.path}`, authMiddleware, validationMiddleware(config.setConfigValidator), this.setConfig);
+		this.router.get(`${this.path}`, environmentLock, authMiddleware, roleMiddleware(Role.ADMIN), this.getConfig);
+		this.router.post(
+			`${this.path}`,
+			environmentLock,
+			authMiddleware,
+			roleMiddleware(Role.ADMIN),
+			validationMiddleware(config.setConfigValidator),
+			this.setConfig
+		);
 	}
 
 	/**
