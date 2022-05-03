@@ -1,4 +1,3 @@
-import figlet from 'figlet';
 import config from './config/config';
 import MetricServer from './metrics/metric-server';
 import AuthController from './resources/auth/auth.controller';

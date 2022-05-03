@@ -2,3 +2,5 @@ node_modules
 storage
 .request
 dist
+/etc/log
+/log
