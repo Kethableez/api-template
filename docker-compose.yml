@@ -69,6 +69,7 @@ services:
     command: pm2-runtime etc/pm2/process.yml
     volumes:
       - ./etc/log:/usr/src/api/log
+      - ./storage:/usr/src/api/storage
     environment:
       - DOCKER=true
     expose:
