@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import Logger from '../logger/logger';
 import HttpException from '../utils/models/http-exception.model';
 
 function notFoundHandler(req: Request, res: Response, next: NextFunction): void {

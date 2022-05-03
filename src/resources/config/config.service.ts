@@ -5,7 +5,7 @@ import ConfigKey from './model/config-key.model';
 
 class ConfigService {
 	private dynamicConfig = new DynamicConfig();
-	private logger = new Logger('ConfigService');
+	private logger = new Logger('Config');
 
 	public async setConfig(key: ConfigKey, value: string): Promise<BaseResponse | Error> {
 		try {
@@ -13,7 +13,7 @@ class ConfigService {
 			this.dynamicConfig.setConfig(key, value);
 
 			this.logger.info('Config set successfully');
-			return { message: 'Config changed successfully' };
+			return { message: 'Config set successfully' };
 		} catch (error: any) {
 			this.logger.error(error.message);
 			throw new Error(error.message);

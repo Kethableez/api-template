@@ -14,11 +14,11 @@ import Logger from '../../logger/logger';
 class AuthService {
 	private tokenStorage = tokenStorageSchema;
 	private user = userSchema;
-	private logger = new Logger('AuthService');
+	private logger = new Logger('Auth');
 
 	public async login(res: Response, payload: LoginPayload): Promise<AuthResponse | Error> {
 		try {
-			this.logger.info('Logging in');
+			this.logger.info('Attempt to logging in');
 			const { username, password } = payload;
 			const user = await this.user.findOne({ username });
 
@@ -37,7 +37,7 @@ class AuthService {
 
 			this.setCookie(res, refreshToken.token, refreshToken.expiresAt);
 
-			this.logger.info('User logged in');
+			this.logger.info(`User ${payload.username} logged in`);
 			return response;
 		} catch (error: any) {
 			this.logger.error(error.message);

@@ -6,18 +6,19 @@ import Logger from '../../logger/logger';
 
 class UserService {
 	private user = userSchema;
-	private logger = new Logger('UserService');
+	private logger = new Logger('User');
 
 	public async createUser(payload: CreateUserPayload): Promise<Response | Error> {
 		try {
-			this.logger.info('Creating user');
+			this.logger.info(`Attempt to create user: ${payload.username}`);
+
 			const hashedPassword = await bcryptjs.hash(payload.password, 10);
 			const user = await this.user.create({
 				username: payload.username,
 				password: hashedPassword,
 			});
 
-			this.logger.info('User created');
+			this.logger.info(`User created with id ${user._id}`);
 			return {
 				message: 'User created successfully',
 				object: user,

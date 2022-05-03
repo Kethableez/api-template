@@ -2,7 +2,7 @@ import Logger from '../../logger/logger';
 import BaseResponse from '../../utils/models/base-response.model';
 
 class HealthService {
-	private logger = new Logger('HealthService');
+	private logger = new Logger('Health');
 
 	public async ping(): Promise<BaseResponse | Error> {
 		try {
